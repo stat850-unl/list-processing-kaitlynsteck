@@ -31,6 +31,22 @@ Add a code chunk that will read each of the JSON files in.
 Store the data in a `drwhoYYYY` object, where `YYYY` is the first year the series  began to air. 
 How are the data objects stored?
 
+```{r}
+library(jsonlite)
+
+## I am a little unsure if I should read in all 'drwho-' JSON file into one object or an independent object for each series. I decided to do an object for each series. 
+
+drwho2005 <- read_json('drwho-210.json')
+
+drwho2023 <- read_json('drwho-72724.json')
+
+drwho1963 <- read_json('drwho-766.json')
+
+
+```
+
+The data is stored as a list in the drwho1963 object. 
+
 ---
 
 ## Examining List Data Structures
@@ -41,13 +57,35 @@ Hint: The `prettify()` function in the R package `jsonlite` will spit out a bett
 
 ----
 
-List here
+[1]
+-id
+-url
+-name
+-season
+-number
+-type
+-airdate
+-airtime
+-airstamp
+-runtime
+-rating
+    -average
+-image
+    -medium
+    -original 
+-summary
+-links
+    -self
+        -href
+    -show
+        -href
+        -name
 
 ----
 
 Is there any information stored in the list structure that you feel is redundant? If so, why?
 
-
+The airdate, airtime, and airstamp provide roughly the same information. This could be condensed into airdate and airtime OR airstamp.
 
 ## Develop A Strategy
 
@@ -57,7 +95,7 @@ Sketch one or more rectangular data tables that look like your expected output. 
 
 ---
 
-Sketch goes here
+![Structure of Dr. Who episodes](1. Computer basics.png)
 
 ---
 
@@ -65,9 +103,11 @@ What operations will you need to perform to get the data into a form matching yo
 
 ---
 
-1. ... fill me in
-2. ...
-3. ...
+1. install purr
+2. Convert the JSON list into a dataframe using map
+3. May need to remove null data with lapply
+4. select the columns we want "runtime" "number" "season number" "rating" "specials"
+5. create new "season length" column
 
 ## Implement Your Strategy
 
@@ -76,6 +116,55 @@ Make sure that the resulting tables have the correct variable types (e.g., dates
 
 Print out the first 5 rows of each table that you create (but no more)!
 
+
+```{r}
+library(purrr)
+library(dplyr)
+runtime <- drwho1963 |> map_dbl ('runtime')
+number <- drwho1963 |> map_dbl ('number')
+season <- drwho1963 |> map_dbl ('season')
+average <- drwho1963 |> map_dbl(c('rating', 'average'))
+type <- drwho1963 |> map_chr ('type')
+
+drwho63<- data.frame (season, number, average, runtime,type)
+drwho63<- drwho63 %>%
+    group_by(season) %>%
+    mutate(season_length = n()) %>%
+    ungroup()
+
+head(drwho63, n=5)
+
+
+runtime <- drwho2005 |> map_dbl ('runtime')
+number <- drwho2005 |> map_dbl ('number')
+season <- drwho2005 |> map_dbl ('season')
+average <- drwho2005 |> map_dbl(c('rating', 'average'))
+type <- drwho2005 |> map_chr ('type')
+
+drwho05<- data.frame (season, number, average, runtime,type)
+drwho05<- drwho05 %>%
+    group_by(season) %>%
+    mutate(season_length = n()) %>%
+    ungroup()
+
+head(drwho05, n=5)
+
+
+runtime <- drwho2023 |> map_dbl ('runtime')
+number <- drwho2023 |> map_dbl ('number')
+season <- drwho2023 |> map_dbl ('season')
+average <- drwho2023 |> map_dbl(c('rating', 'average'))
+type <- drwho2023 |> map_chr ('type')
+
+drwho23<- data.frame (season, number, average, runtime,type)
+drwho23<- drwho23 %>%
+    group_by(season) %>%
+    mutate(season_length = n()) %>%
+    ungroup()
+
+head(drwho23, n=5)
+```
+
 ## Examining Episode Air Dates
 
 Visually represent the length of time between air dates of adjacent episodes within the same season, across all seasons of Dr. Who. You may need to create a factor to indicate which Dr. Who series is indicated, as there will be a Season 1 for each of the series. 
@@ -83,7 +172,11 @@ Your plot must have appropriate labels and a title.
 
 ---
 
-code chunk here
+```{r}
+
+
+
+```
 
 ---
 
@@ -98,8 +191,13 @@ Use a functional programming approach to read in all of the files and bind them 
 
 ----
 
-functional code goes here
+```{r}
+library(jsonlite)
 
+drwho_all <- read_json('drwho-210.json', 'drwho-766.json', 'drwho-72724.json', 'torchwood-659.json', 'torchwood-26694.json')
+
+
+```
 ----
 
 Then, use the processing code you wrote for the previous section to perform appropriate data cleaning steps. 
@@ -108,7 +206,23 @@ Call this rectangular table `whoverse`.
 
 ----
 
-Cleaning code goes here
+```{r}
+
+runtime <- drwho_all |> map_dbl ('runtime')
+number <- drwho_all |> map_dbl ('number')
+season <- drwho_all |> map_dbl ('season')
+average <- drwho_all |> map_dbl(c('rating', 'average'))
+type <- drwho_all |> map_chr ('type')
+
+clean_drwho<- data.frame (season, number, average, runtime,type)
+clean_drwho<- clean_drwho %>%
+    group_by(season) %>%
+    mutate(season_length = n()) %>%
+    ungroup()
+
+head(clean_drwho, n=5)
+
+```
 
 ----
 
