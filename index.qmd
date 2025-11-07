@@ -1,6 +1,6 @@
 ---
 title: "Lab: List Processing"
-author: "Your Name Here"
+author: "Kaitlyn Steck"
 format: html
 number-sections: true
 number-depth: 2

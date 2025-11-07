@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Your Name Here">
+
+<title>Lab: List Processing</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab: List Processing</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your Name Here </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>You can see the purpose of this assignment as well as the skills and knowledge you should be using and acquiring, in the <a href="tilt.qmd">Transparency in Learning and Teaching (TILT)</a> document in this repository. The TILT document also contains a checklist for self-reflection that will provide some guidance on how the assignment will be graded.</p>
+</div>
+</div>
+</div>
+<section id="data-source" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Data Source</h1>
+<p>JSON data files for this assignment were obtained from the TVMaze API for three different Doctor Who series as well as two different spin-offs.</p>
+<ul>
+<li>Dr.&nbsp;Who <a href="https://www.tvmaze.com/shows/72724/doctor-who">2023-2025</a></li>
+<li>Dr.&nbsp;Who <a href="https://www.tvmaze.com/shows/210/doctor-who">2005-2022</a></li>
+<li>Dr.&nbsp;Who <a href="https://www.tvmaze.com/shows/766/doctor-who">1963-1996</a></li>
+<li><a href="https://www.tvmaze.com/shows/970/the-sarah-jane-adventures">The Sarah Jane Adventures (2007-2020)</a></li>
+<li><a href="https://www.tvmaze.com/shows/659/torchwood">Torchwood (2006-2011)</a></li>
+<li><a href="https://www.tvmaze.com/shows/26694/torchwood-web-of-lies">Torchwood: Web of Lies (2011)</a></li>
+</ul>
+</section>
+<section id="warming-up" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Warming Up</h1>
+<p>For this portion of the assignment, only work with the canonical Dr.&nbsp;Who files (drwho2023.json, drwho2005.json, drwho1963.json).</p>
+<section id="parse-the-file" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="parse-the-file"><span class="header-section-number">2.1</span> Parse the file</h2>
+<p>Add a code chunk that will read each of the JSON files in. Store the data in a <code>drwhoYYYY</code> object, where <code>YYYY</code> is the first year the series began to air. How are the data objects stored?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## I am a little unsure if I should read in all 'drwho-' JSON file into one object or an independent object for each series. I decided to do an object for each series. </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>drwho2005 <span class="ot">&lt;-</span> <span class="fu">read_json</span>(<span class="st">'drwho-210.json'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>drwho2023 <span class="ot">&lt;-</span> <span class="fu">read_json</span>(<span class="st">'drwho-72724.json'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>drwho1963 <span class="ot">&lt;-</span> <span class="fu">read_json</span>(<span class="st">'drwho-766.json'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The data is stored as a list in the drwho1963 object.</p>
+<hr>
+</section>
+<section id="examining-list-data-structures" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="examining-list-data-structures"><span class="header-section-number">2.2</span> Examining List Data Structures</h2>
+<p>Create a nested markdown list showing what variables are nested at each level of the JSON file. Include an ‘episode’ object that is a stand-in for a generic episode (e.g.&nbsp;don’t create a list with all 700+ episodes in it, just show what a single episode has). Make sure you use proper markdown formatting to ensure that the lists are rendered properly when you compile your document.</p>
+<p>Hint: The <code>prettify()</code> function in the R package <code>jsonlite</code> will spit out a better-formatted version of a JSON file.</p>
+<hr>
+<p>[1] -id -url -name -season -number -type -airdate -airtime -airstamp -runtime -rating -average -image -medium -original -summary -links -self -href -show -href -name</p>
+<hr>
+<p>Is there any information stored in the list structure that you feel is redundant? If so, why?</p>
+<p>The airdate, airtime, and airstamp provide roughly the same information. This could be condensed into airdate and airtime OR airstamp.</p>
+</section>
+<section id="develop-a-strategy" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="develop-a-strategy"><span class="header-section-number">2.3</span> Develop A Strategy</h2>
+<p>Consider what information you would need to examine the structure of Dr.&nbsp;Who episodes over time (show runtime, season length, specials) as well as the ratings, combining information across all three data files.</p>
+<p>Sketch one or more rectangular data tables that look like your expected output. Remember that if you link to an image, you must link to something with a picture extension (<code>.png</code>, <code>.jpg</code>), and if you reference a file it should be using a local path and you must also add the picture to your git repository.</p>
+<hr>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="1.%20Computer%20basics.png" class="img-fluid figure-img"></p>
+<figcaption>Structure of Dr.&nbsp;Who episodes</figcaption>
+</figure>
+</div>
+<hr>
+<p>What operations will you need to perform to get the data into a form matching your sketch? Make an ordered list of steps you need to take.</p>
+<hr>
+<ol type="1">
+<li>install purr</li>
+<li>Convert the JSON list into a dataframe using map</li>
+<li>May need to remove null data with lapply</li>
+<li>select the columns we want “runtime” “number” “season number” “rating” “specials”</li>
+<li>create new “season length” column</li>
+</ol>
+</section>
+<section id="implement-your-strategy" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="implement-your-strategy"><span class="header-section-number">2.4</span> Implement Your Strategy</h2>
+<p>Add a code chunk that will convert the JSON files into the table(s) you sketched above. Make sure that the resulting tables have the correct variable types (e.g., dates should not be stored as character variables).</p>
+<p>Print out the first 5 rows of each table that you create (but no more)!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'purrr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:jsonlite':
+
+    flatten</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>runtime <span class="ot">&lt;-</span> drwho1963 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'runtime'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>number <span class="ot">&lt;-</span> drwho1963 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'number'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>season <span class="ot">&lt;-</span> drwho1963 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'season'</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>average <span class="ot">&lt;-</span> drwho1963 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="st">'rating'</span>, <span class="st">'average'</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> drwho1963 <span class="sc">|&gt;</span> <span class="fu">map_chr</span> (<span class="st">'type'</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>drwho63<span class="ot">&lt;-</span> <span class="fu">data.frame</span> (season, number, average, runtime,type)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>drwho63<span class="ot">&lt;-</span> drwho63 <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">season_length =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(drwho63, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  season number average runtime type    season_length
+   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;           &lt;int&gt;
+1      1      1     8.1      25 regular            42
+2      1      2     7.2      25 regular            42
+3      1      3     7.1      25 regular            42
+4      1      4     7.4      25 regular            42
+5      1      5     7.6      25 regular            42</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>runtime <span class="ot">&lt;-</span> drwho2005 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'runtime'</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>number <span class="ot">&lt;-</span> drwho2005 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'number'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>season <span class="ot">&lt;-</span> drwho2005 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'season'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>average <span class="ot">&lt;-</span> drwho2005 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="st">'rating'</span>, <span class="st">'average'</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> drwho2005 <span class="sc">|&gt;</span> <span class="fu">map_chr</span> (<span class="st">'type'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>drwho05<span class="ot">&lt;-</span> <span class="fu">data.frame</span> (season, number, average, runtime,type)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>drwho05<span class="ot">&lt;-</span> drwho05 <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">season_length =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(drwho05, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  season number average runtime type    season_length
+   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;           &lt;int&gt;
+1      1      1     7.5      45 regular            13
+2      1      2     7.3      45 regular            13
+3      1      3     7.2      45 regular            13
+4      1      4     7        45 regular            13
+5      1      5     7.1      45 regular            13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>runtime <span class="ot">&lt;-</span> drwho2023 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'runtime'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>number <span class="ot">&lt;-</span> drwho2023 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'number'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>season <span class="ot">&lt;-</span> drwho2023 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'season'</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>average <span class="ot">&lt;-</span> drwho2023 <span class="sc">|&gt;</span> <span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="st">'rating'</span>, <span class="st">'average'</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> drwho2023 <span class="sc">|&gt;</span> <span class="fu">map_chr</span> (<span class="st">'type'</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>drwho23<span class="ot">&lt;-</span> <span class="fu">data.frame</span> (season, number, average, runtime,type)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>drwho23<span class="ot">&lt;-</span> drwho23 <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">season_length =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(drwho23, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  season number average runtime type    season_length
+   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;           &lt;int&gt;
+1      1      1     6        46 regular             8
+2      1      2     6.2      50 regular             8
+3      1      3     7.2      45 regular             8
+4      1      4     7.8      47 regular             8
+5      1      5     7.5      44 regular             8</code></pre>
+</div>
+</div>
+</section>
+<section id="examining-episode-air-dates" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="examining-episode-air-dates"><span class="header-section-number">2.5</span> Examining Episode Air Dates</h2>
+<p>Visually represent the length of time between air dates of adjacent episodes within the same season, across all seasons of Dr.&nbsp;Who. You may need to create a factor to indicate which Dr.&nbsp;Who series is indicated, as there will be a Season 1 for each of the series. Your plot must have appropriate labels and a title.</p>
+<hr>
+<hr>
+<p>In 2-3 sentences, explain what conclusions you might draw from the data. What patterns do you notice? Are there data quality issues?</p>
+</section>
+</section>
+<section id="timey-wimey-series-and-episodes" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Timey-Wimey Series and Episodes</h1>
+<section id="setting-up" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="setting-up"><span class="header-section-number">3.1</span> Setting Up</h2>
+<p>In this section of the assignment, you will work with all of the provided JSON files. Use a functional programming approach to read in all of the files and bind them together.</p>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>drwho_all <span class="ot">&lt;-</span> <span class="fu">read_json</span>(<span class="st">'drwho-210.json'</span>, <span class="st">'drwho-766.json'</span>, <span class="st">'drwho-72724.json'</span>, <span class="st">'torchwood-659.json'</span>, <span class="st">'torchwood-26694.json'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Then, use the processing code you wrote for the previous section to perform appropriate data cleaning steps. At the end of the chunk, your data should be in a reasonably tidy, rectangular form with appropriate data types. Call this rectangular table <code>whoverse</code>.</p>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>runtime <span class="ot">&lt;-</span> drwho_all <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'runtime'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>number <span class="ot">&lt;-</span> drwho_all <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'number'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>season <span class="ot">&lt;-</span> drwho_all <span class="sc">|&gt;</span> <span class="fu">map_dbl</span> (<span class="st">'season'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>average <span class="ot">&lt;-</span> drwho_all <span class="sc">|&gt;</span> <span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="st">'rating'</span>, <span class="st">'average'</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> drwho_all <span class="sc">|&gt;</span> <span class="fu">map_chr</span> (<span class="st">'type'</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>clean_drwho<span class="ot">&lt;-</span> <span class="fu">data.frame</span> (season, number, average, runtime,type)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>clean_drwho<span class="ot">&lt;-</span> clean_drwho <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">season_length =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clean_drwho, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  season number average runtime type    season_length
+   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;           &lt;int&gt;
+1      1      1     7.5      45 regular            13
+2      1      2     7.3      45 regular            13
+3      1      3     7.2      45 regular            13
+4      1      4     7        45 regular            13
+5      1      5     7.1      45 regular            13</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="air-time" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="air-time"><span class="header-section-number">3.2</span> Air Time</h2>
+<p>Investigate the air time of the episodes relative to the air date, series, and season. It may help to know that the <a href="https://en.wikipedia.org/wiki/Watershed_(broadcasting)">watershed</a> period in the UK is 9:00pm - 5:30am. Content that is unsuitable for minors may only be shown during this window. What conclusions do you draw about the target audience for each show?</p>
+<p>How can you explain any shows in the Dr.&nbsp;Who universe which do not have airtimes provided?</p>
+</section>
+<section id="another-layer-of-json" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="another-layer-of-json"><span class="header-section-number">3.3</span> Another Layer of JSON</h2>
+<p>Use the show URL (<code>_links</code> &gt; <code>show</code> &gt; <code>href</code>) to read in the JSON file for each show. As with scraping, it is important to be polite and not make unnecessary server calls, so pre-process the data to ensure that you only make one server call for each show. You should use a functional programming approach when reading in these files.</p>
+<hr>
+<p>Read in JSON files from URLs here</p>
+<hr>
+<p>Process the JSON files using a functional approach and construct an appropriate table for the combined data you’ve acquired during this step (no need to join the data with the full <code>whoverse</code> episode-level data).</p>
+<hr>
+<p>Process JSON files to make a table here</p>
+<hr>
+<p>What keys would you use to join this data with the <code>whoverse</code> episode level data? Explain.</p>
+<blockquote class="blockquote">
+<p>Explanation</p>
+</blockquote>
+</section>
+<section id="explore" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="explore"><span class="header-section-number">3.4</span> Explore!</h2>
+<p>Use the data you’ve assembled to answer a question you find interesting about this data. Any graphics you make should have appropriate titles and axis labels. Tables should be reasonably concise (e.g.&nbsp;don’t show all 900 episodes in a table), generated in a reproducible fashion, and formatted with markdown. Any results (graphics, tables, models) should be explained with at least 2-3 sentences.</p>
+<p>If you’re stuck, consider examining the frequency of words in the episode descriptions across different series or seasons. Or, look at the episode guest cast by appending <code>/guestcast/</code> to the episode URL and see whether there are common guests across different seasons.</p>
+<hr>
+<p>Question goes here</p>
+<hr>
+<p>Code goes here – once you output a result, you should explain it using markdown text, and then start a new code chunk to continue your exploration.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
